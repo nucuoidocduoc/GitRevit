@@ -20,6 +20,14 @@ namespace GitRevit.RequestProcessing
             _elementsFromLocal = elementsFromLocal;
         }
 
+        public void SyncLocalOverrideServer()
+        {
+            SyncNewElement();
+            SyncDeleteElement();
+            SyncEditedElement();
+            _repository.CreateNewRevision();
+        }
+
         public void SyncDeleteElement()
         {
             var elementsMissingFromLocal = CommonProcessing.RetreiveDeletedLocalElement(_elementsFromLocal, _elementsFromServer);
@@ -35,17 +43,22 @@ namespace GitRevit.RequestProcessing
 
         public void SyncEditedElement()
         {
-            // bao conflict
-            throw new NotImplementedException();
+            var elements = CommonProcessing.RetreiveElementEditedOnLocal(_elementsFromLocal);
+            foreach (var element in elements) {
+                _repository.ImplementEditOnServer(element.CommonId, null);
+            }
         }
 
         public void SyncNewElement()
         {
             var newElement = CommonProcessing.RetreiveNewElementFromLocal(_elementsFromLocal);
+
             foreach (var elem in _elementsFromLocal) {
+                _repository.CreateNewElement(elem);
                 _repository.CreateNewElementToOtherDrawing(elem, "current drawing");
+                _repository.CreateNewVersion(elem.CommonId, null);
             }
-            // xu li tiep voi version + revision
+            // xu li tiep voi version
         }
 
         public void SyncNoChangeElement()

@@ -55,5 +55,14 @@ namespace GitRevit.RequestProcessing
                 yield return element;
             }
         }
+
+        public static IEnumerable<RevitElementModel> RetreiveElementEditedOnLocal(IEnumerable<RevitElementModel> elementsFromServer)
+        {
+            // Nếu element đã tồn tại trên server đang ở trạng thái deleted(1 trong 3 element ở 3 bộ môn với commonId tương ứng) thì sẽ tiến hành áp chế ghi đè
+            // delete ở dưới local
+            foreach (RevitElementModel element in elementsFromServer) {
+                yield return element;
+            }
+        }
     }
 }

@@ -31,6 +31,15 @@ namespace GitRevit.Services
         {
         }
 
+        public void CreateNewElement(RevitElementModel elementInOrigin)
+        {
+        }
+
+        public string CreateNewVersion(string commonId, ElementVersionModel elementVersionModel)
+        {
+            return "Id after create new";
+        }
+
         public bool ChangePropsElement<T, M>(T ele, string nameProp, M newValue)
         {
             foreach (var prop in ele.GetType().GetProperties()) {
@@ -42,6 +51,20 @@ namespace GitRevit.Services
                 }
             }
             return false;
+        }
+
+        public bool ImplementEditOnServer(string commonId, ElementVersionModel elementVersionModel)
+        {
+            CreateNewVersion(commonId, elementVersionModel);
+            return true;
+        }
+
+        public void CreateNewRevision()
+        {
+            // Tìm tất cả các element có trạng thái k bị delete trong drawing
+            // Lấy tất cả các version mới nhất của mỗi element đó
+            // convert =>json string
+            // Tiến hành tạo Revision.
         }
 
         public bool DeleteElementOnLocal(RevitElementModel elementInOrigin)
